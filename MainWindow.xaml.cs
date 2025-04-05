@@ -198,11 +198,11 @@ public partial class MainWindow : Window
         Close();
     }
 
-    // private void DeleteImage_Click(object sender, RoutedEventArgs e)
-    // {
-    //     _backgroundManager.RemoveCurrentBackground();
-    //     UpdateBackground(_backgroundManager.GetCurrentBackground());
-    // }
+    private void DeleteImage_Click(object sender, RoutedEventArgs e)
+    {
+        _backgroundManager.RemoveCurrentBackground();
+        UpdateBackground(_backgroundManager.GetCurrentBackground());
+    }
 
     private void Exit_Click(object sender, RoutedEventArgs e)
     {

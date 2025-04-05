@@ -16,7 +16,7 @@
             <MenuItem Header="设置切换间隔" Click="SetInterval_Click"/>
             <MenuItem Header="设置透明度" Click="SetOpacity_Click"/>
             <MenuItem Header="重置窗口大小" Click="ResetWindowSize_Click"/>
-            <!-- <MenuItem Header="删除当前图片" Click="DeleteImage_Click"/> -->
+            <MenuItem Header="删除当前图片" Click="DeleteImage_Click"/>
             <MenuItem Header="退出" Click="Exit_Click"/>
         </ContextMenu>
         

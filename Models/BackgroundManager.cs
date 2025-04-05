@@ -19,6 +19,8 @@ namespace DesktopWidget.Models
             _settings = WidgetSettings.LoadSettings();
             InitializeTimer();
         }
+
+
         
         private void InitializeTimer()
         {
@@ -28,11 +30,15 @@ namespace DesktopWidget.Models
             _changeTimer.AutoReset = true;
             _changeTimer.Start();
         }
+
+
         
         private void OnTimerElapsed(object? sender, ElapsedEventArgs e)
         {
             CheckAndUpdateBackground();
         }
+
+
         
         // 检查并根据设置更新背景
         public void CheckAndUpdateBackground()
@@ -41,13 +47,19 @@ namespace DesktopWidget.Models
             {
                 return;
             }
+
+
             
             TimeSpan elapsed = DateTime.Now - _settings.LastChangeTime;
             if (elapsed.TotalHours >= _settings.ChangeIntervalHours)
             {
                 ChangeToNextImage();
             }
+
+
         }
+
+
         
         // 更改到下一张图片
         public void ChangeToNextImage()
@@ -56,6 +68,8 @@ namespace DesktopWidget.Models
             {
                 return;
             }
+
+
             
             _settings.CurrentImageIndex = (_settings.CurrentImageIndex + 1) % _settings.BackgroundImages.Count;
             _settings.LastChangeTime = DateTime.Now;
@@ -63,6 +77,8 @@ namespace DesktopWidget.Models
             
             NotifyBackgroundChanged();
         }
+
+
         
         // 获取当前背景图片
         public BitmapImage GetCurrentBackground()
@@ -71,15 +87,21 @@ namespace DesktopWidget.Models
             {
                 return new BitmapImage(new Uri(_defaultImagePath));
             }
+
+
             
             string imagePath = _settings.BackgroundImages[_settings.CurrentImageIndex];
             if (File.Exists(imagePath))
             {
                 return LoadImage(imagePath);
             }
+
+
             
             return new BitmapImage(new Uri(_defaultImagePath));
         }
+
+
         
         // 加载图片
         private BitmapImage LoadImage(string path)
@@ -92,6 +114,8 @@ namespace DesktopWidget.Models
             image.Freeze(); // 提高性能
             return image;
         }
+
+
         
         // 添加图片到背景集合
         public void AddImage(string path)
@@ -101,7 +125,11 @@ namespace DesktopWidget.Models
                 _settings.BackgroundImages.Add(path);
                 _settings.SaveSettings();
             }
+
+
         }
+
+
         
         // 移除背景图片
         public void RemoveImage(string path)
@@ -113,10 +141,16 @@ namespace DesktopWidget.Models
                 {
                     _settings.CurrentImageIndex = 0;
                 }
+
+
                 _settings.SaveSettings();
                 NotifyBackgroundChanged();
             }
+
+
         }
+
+
         
         // 设置图片切换间隔（小时）
         public void SetChangeInterval(int hours)
@@ -126,13 +160,19 @@ namespace DesktopWidget.Models
                 _settings.ChangeIntervalHours = hours;
                 _settings.SaveSettings();
             }
+
+
         }
+
+
         
         // 获取当前透明度
         public double GetOpacity()
         {
             return _settings.Opacity;
         }
+
+
         
         // 设置透明度
         public void SetOpacity(double opacity)
@@ -141,18 +181,24 @@ namespace DesktopWidget.Models
             _settings.Opacity = Math.Clamp(opacity, 0.2, 1.0);
             _settings.SaveSettings();
         }
+
+
         
         // 获取窗口宽度
         public double GetWindowWidth()
         {
             return _settings.WindowWidth;
         }
+
+
         
         // 获取窗口高度
         public double GetWindowHeight()
         {
             return _settings.WindowHeight;
         }
+
+
         
         // 设置窗口尺寸
         public void SetWindowSize(double width, double height)
@@ -161,17 +207,40 @@ namespace DesktopWidget.Models
             _settings.WindowHeight = Math.Max(150, height); // 最小高度
             _settings.SaveSettings();
         }
+
+
         
         // 通知背景图片已更改
         private void NotifyBackgroundChanged()
         {
             BackgroundChanged?.Invoke(this, GetCurrentBackground());
         }
+
+
         
         // 获取设置对象
         public WidgetSettings GetSettings()
         {
             return _settings;
         }
+
+        // 删除当前背景图片
+        public void RemoveCurrentBackground()
+        {
+            if (_settings.BackgroundImages.Count == 0)
+                return;
+                
+            string currentImage = _settings.BackgroundImages[_settings.CurrentImageIndex];
+            RemoveImage(currentImage);
+            
+            // 如果删除后列表为空，重置索引
+            if (_settings.BackgroundImages.Count == 0)
+            {
+                _settings.CurrentImageIndex = 0;
+                _settings.SaveSettings();
+                NotifyBackgroundChanged();
+            }
+        }
+
     }
-} 
+}
